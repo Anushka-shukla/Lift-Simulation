@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+
+body{
+    background-image: url("/assets/super-mario-bg.png");
+    background-size: cover;
+    text-align: center;
+    color: white;
+    font-weight: 100px;
+    font-family: 'Bangers', cursive;
+
+}
+
+.simulation_layout {
+    border: 1px solid red;
+}
+
+.topBtn{
+    display: flex;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.backBtn {
+    color: black;
+    border-radius: 10px;
+    border-style: none;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px;
+    font-size: larger;
+    font-family: 'Bangers', cursive;
+    text-decoration: none;
+}
+
+
+.btn_wrapper {
+    display: flex;
+    justify-content: end;
+    flex-direction: column;
+    padding-bottom: 10px;
+    gap: 10px;
+}
+
+.btn_lift_up {
+    font-size: 8px;
+    width: 50px;
+    height: 25px;
+    border-radius: 10px;
+    border-style: none;
+    background: greenyellow;
+    color: black;
+    font-family: 'Bangers', cursive;
+    font-size: large;
+}
+
+.btn_lift_down {
+    font-size: 8px;
+    width: 50px;
+    height: 25px;
+    border-radius: 10px;
+    border-style: none;
+    background: orange;
+    color: black;
+    font-family: 'Bangers', cursive;
+    font-size: large;
+}
+
+
+.floor_container {
+    min-height: 20px;
+    /* border-bottom: 1.5px solid white; */
+    padding: 20px;
+    border: 1px solid red;
+}
+
+.floor_inner_container {
+    min-height: 20px;
+    border-bottom: 1.5px solid white;
+    padding: 20px;
+    border: 1px solid greenyellow;
+}
+
+
+.floor_no {
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px;
+    
+}
