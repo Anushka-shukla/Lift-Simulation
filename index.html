@@ -1,30 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lift Simulation</title>
-    <link rel="stylesheet" href="./css/main.css"> 
+    <link rel="stylesheet" href="./css/main.css">
+    <script src="./js/main.js" defer> </script>
 
-    <script src="./js/main.js"> </script>
-    
+
 </head>
+
 <body>
-    <div class="input-section" id="inputSecion">
+    <!-- Input section -->
+    <div class="input-section" id="inputSection">
         <div>
             <label class="lbl"> No. of floors</label>
-            <input class="input-1" type="number" placeholder="Atleast 2 floors"></input>
+            <input class="input-1" id="enterFloors" type="number" value="2" placeholder="Atleast 2 floors"></input>
         </div>
         <div>
             <label class="lbl"> No. of lifts</label>
-            <input class="input-2" type="number" placeholder="Atleast 2 lifts"></input>
+            <input class="input-2" id="enterLifts" type="number" value="2" placeholder="Atleast 2 lifts"></input>
         </div>
 
-            <a class="generateBtn" href="./lifts.html">Start</a>
+        <button class="generateBtn" id="generateBtn">Start</button>
     </div>
 
+    <!-- Floor section -->
+    <div class="topBtn" id="top-btn">
+            <a href="./index.html" class="backBtn"> Back ></a>
+        </div>
 
+    <div class="floor-section"></div>
 
 </body>
+
 </html>
