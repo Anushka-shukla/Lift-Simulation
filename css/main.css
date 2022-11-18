@@ -196,6 +196,14 @@ body {
     margin: auto;
 }
 
+.liftContainer{
+    width: 45%;
+    /* background-color: aqua; */
+    display: flex;
+    justify-content: space-between;
+    
+}
+
 .lift_left,
 .lift_right {
     width: 40px;

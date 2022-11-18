@@ -3,17 +3,18 @@ let enteredFloor = document.getElementById("enterFloors");
 let enteredLift = document.getElementById("enterLifts");
 let startBtn = document.getElementById("generateBtn");
 let topBtn = document.getElementById("top-btn")
-let sampleDiv = document.querySelector(".sample-div");
 
 let floorSection = document.querySelector(".floor-section");
 
-function buttonClickUp(j){
-    console.log("up button of floor", j, "is clicked");
+function moveLift(j) {
+    let firstLift = document.querySelector(".liftContainer").childNodes[0];
+    console.log(" inside calc dis ", j);
+    let distance = (90 * j) + (35*j);
+    firstLift.style.transform=`translate(0, -${distance}px)`;
+    firstLift.style.transitionDuration=`2s`;
+
 }
 
-function buttonClickDown(j) {
-    console.log("down button of floor", j, "is clicked");
-}
 
 // generating floors
 let generateFloors = (floor_no) => {
@@ -26,8 +27,10 @@ let generateFloors = (floor_no) => {
         btn_lift_down.className = "btn_lift_down";
         btn_lift_down.textContent = "DOWN";
 
-        btn_lift_up.addEventListener("click", () => { buttonClickUp(j) })
-        btn_lift_down.addEventListener("click", () => { buttonClickDown(j) })
+        btn_lift_up.addEventListener("click", () => { moveLift(j) });
+
+        btn_lift_down.addEventListener("click", () => { moveLift(j) });
+
 
         // button "UP" & "DOWN" are inside a parent wrapper "btn_wrapper" which is child of flooSection
 
@@ -52,9 +55,17 @@ let generateFloors = (floor_no) => {
 // generating lifts
 let generateLifts = (lift_no) => {
 
+    // parent of lifts
+    const liftContainer = document.createElement("div");
+    liftContainer.className = "liftContainer";
+
     for (let i = 0; i < lift_no; i++) {
+
         const lift = document.createElement("div");
         lift.className = "lift";
+
+
+        // setting value of the lift when it's on floor-0
         lift.setAttribute("data-currentFloor", 0);
         const lift_right = document.createElement("div");
         lift_right.className = "lift_right";
@@ -64,14 +75,19 @@ let generateLifts = (lift_no) => {
         lift.appendChild(lift_left);
         lift.appendChild(lift_right);
 
+
         // console.log(floorSection.childNodes.length - 1);
         setTimeout(() => {
             let firstFloor = floorSection.childNodes[floorSection.childNodes.length - 1];
-            firstFloor.append(lift);
+            firstFloor.append(liftContainer);
+            liftContainer.append(lift);
+            console.log(document.querySelector(".lift"));
 
         }, 2000)
 
     }
+
+
 
 };
 
@@ -102,29 +118,5 @@ startBtn.addEventListener("click", (e) => {
     verifySimulationInputs();
     inputsWrapper.style.display = "none";
     topBtn.style.display = "block";
-    console.log(sampleDiv)
+    // console.log(sampleDiv)
 });
-
-// movement of lift
-
-// get the btns first then on click property, 
-// then make 2 variables that store the current position of the lift and the target floor
-// console log the taget floor
-
-// let targetFloor = ;
-// const allLiftBtns = document.getElementsByClassName(".floorSection").childNodes;
-
-function calcDistance(){
-
-
-}
-
-function moveLiftUp() {
-
-    //get all up down btns from btn wrapper
-    let allLiftBtns = document.querySelector(".floor-section").childNodes;
-    let currentFloor = floorSection.childNodes[floorSection.childNodes.length - 1];
-    console.log("log of floor section" + floorSection);
-
-}
-
