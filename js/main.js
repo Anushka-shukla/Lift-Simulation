@@ -9,7 +9,7 @@ let floorSection = document.querySelector(".floor-section");
 function moveLift(j) {
     let firstLift = document.querySelector(".liftContainer").childNodes[0];
     console.log(" inside calc dis ", j);
-    let distance = (90 * j) + (35*j);
+    let distance = (90 * j) + (30*j);
     firstLift.style.transform=`translate(0, -${distance}px)`;
     firstLift.style.transitionDuration=`2s`;
 
