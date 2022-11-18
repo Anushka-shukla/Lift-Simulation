@@ -15,6 +15,8 @@ function moveLift(j) {
 
 }
 
+// free lift 
+
 
 // generating floors
 let generateFloors = (floor_no) => {

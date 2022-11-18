@@ -1,20 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
 
-body {
-    background-image: url('/assets/super-mario-wallpaper.png');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+  } 
+   
+  #liftSpace {
+    background: linear-gradient(rgba(120,120,120,.5), rgba(120,120,120,.5)), url("/assets/super-mario-wallpaper.png");
+    background-repeat: no-repeat;
     background-size: cover;
     text-align: center;
     color: black;
     font-weight: 100px;
     font-family: 'Bangers', cursive;
-    height: 100%;
-}
-
-/* Input section styling */
+    height: 100vh; 
+    overflow: auto;
+    
+} 
+   
 
 .input-section {
     height: 150px;
     padding: 15px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     margin-top: 85px;
@@ -59,27 +69,12 @@ body {
     text-decoration: none;
 }
 
-
-/* floor section styling */
-/* .floor-section{
-     border: 1px solid red;
-} */
-
-/* .simulation_layout {
-    /* border: 1px solid red; */
-/* }  */
-
-
-
-/* .hidden {
-    display: none;
-  } */
-
 .topBtn {
     display: flex;
     text-align: left;
     margin-bottom: 20px;
-    display: none
+    margin-top: 20px;
+    display: none;
 }
 
 .backBtn {
