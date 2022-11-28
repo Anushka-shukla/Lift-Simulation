@@ -11,12 +11,33 @@ function moveLift(j) {
     console.log(" inside calc dis ", j);
     let distance = (90 * j) + (30*j);
     firstLift.style.transform=`translate(0, -${distance}px)`;
-    firstLift.style.transitionDuration=`2s`;
+    firstLift.style.transitionDuration= `${2*j}s`; // variable karna hai
+
+    setTimeout(()=> {
+        animateLiftDoors();
+    }, 2000*j)
+   
 
 }
 
-// free lift 
+// states of lifts {free or busy}
 
+
+
+function animateLiftDoors(){
+    const leftDoor = document.querySelector(".lift_left");
+    const rightDoor = document.querySelector(".lift_right");
+    leftDoor.style.transform = `translate(-30px, 0)`;
+    rightDoor.style.transform = `translate(30px, 0)`;
+    leftDoor.style.transitionDuration = `2.5s`;
+    rightDoor.style.transitionDuration = `2.5s`;
+
+    setTimeout(()=>{
+        leftDoor.style.transform = `translate(0, 0)`;
+    rightDoor.style.transform = `translate(0, 0)`;
+    }, 2500)
+
+}
 
 // generating floors
 let generateFloors = (floor_no) => {
@@ -114,7 +135,7 @@ function verifySimulationInputs() {
     }
 };
 
-
+// clicking on start btn
 startBtn.addEventListener("click", (e) => {
     e.preventDefault();
     verifySimulationInputs();
