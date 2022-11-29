@@ -9,22 +9,36 @@ let floorSection = document.querySelector(".floor-section");
 function moveLift(j) {
     let firstLift = document.querySelector(".liftContainer").childNodes[0];
     console.log(" inside calc dis ", j);
-    let distance = (90 * j) + (30*j);
-    firstLift.style.transform=`translate(0, -${distance}px)`;
-    firstLift.style.transitionDuration= `${2*j}s`; // variable karna hai
+    let distance = (90 * j) + (30 * j);
+    firstLift.style.transform = `translate(0, -${distance}px)`;
+    firstLift.style.transitionDuration = `${2 * j}s`;
 
-    setTimeout(()=> {
+    firstLift.setAttribute('data-state', 'busy');
+    console.log("the lift is at state: " + firstLift.dataset.state);
+
+    setTimeout(() => {
         animateLiftDoors();
-    }, 2000*j)
-   
+    }, 2000 * j)
+
 
 }
 
 // states of lifts {free or busy}
+function liftState() {
+    // get all the generatted lifts instead of nodelist it'll return an array
+   const mylifts = Array.from(document.querySelectorAll(".lift"));
+   console.log("My lifts : " + mylifts);
+//    let freeLifts = [];
+//    let busyLifts = [];
+//    console.log("All the lifts: " + mylifts);
+//    mylifts.setAttribute("liftState", free);
+//    mylifts.setAttribute("liftState", busy);
+
+}
 
 
-
-function animateLiftDoors(){
+function animateLiftDoors() {
+    const firstLift = document.querySelector(".liftContainer").childNodes[0];
     const leftDoor = document.querySelector(".lift_left");
     const rightDoor = document.querySelector(".lift_right");
     leftDoor.style.transform = `translate(-30px, 0)`;
@@ -32,10 +46,20 @@ function animateLiftDoors(){
     leftDoor.style.transitionDuration = `2.5s`;
     rightDoor.style.transitionDuration = `2.5s`;
 
-    setTimeout(()=>{
+    setTimeout(() => {
         leftDoor.style.transform = `translate(0, 0)`;
-    rightDoor.style.transform = `translate(0, 0)`;
+        rightDoor.style.transform = `translate(0, 0)`;
+        
+        
     }, 2500)
+
+    setTimeout(()=>{
+        firstLift.setAttribute('data-state', 'free');
+        console.log("the lift is at state: " + firstLift.dataset.state);
+
+    }, 5000)
+
+    // console.log("the lift is at state: " + firstLift.dataset.state);
 
 }
 
@@ -53,7 +77,6 @@ let generateFloors = (floor_no) => {
         btn_lift_up.addEventListener("click", () => { moveLift(j) });
 
         btn_lift_down.addEventListener("click", () => { moveLift(j) });
-
 
         // button "UP" & "DOWN" are inside a parent wrapper "btn_wrapper" which is child of flooSection
 
@@ -84,9 +107,10 @@ let generateLifts = (lift_no) => {
 
     for (let i = 0; i < lift_no; i++) {
 
+        const liftNo = `${i}`;
+
         const lift = document.createElement("div");
         lift.className = "lift";
-
 
         // setting value of the lift when it's on floor-0
         lift.setAttribute("data-currentFloor", 0);
@@ -98,13 +122,18 @@ let generateLifts = (lift_no) => {
         lift.appendChild(lift_left);
         lift.appendChild(lift_right);
 
+        lift.setAttribute('id' , liftNo);
+        console.log(lift.id);
 
-        // console.log(floorSection.childNodes.length - 1);
+        // setting the status of the lift as free initially
+        lift.setAttribute('data-state', 'free');
+        console.log("the lift is at state: " + lift.dataset.state);
+
         setTimeout(() => {
             let firstFloor = floorSection.childNodes[floorSection.childNodes.length - 1];
             firstFloor.append(liftContainer);
             liftContainer.append(lift);
-            console.log(document.querySelector(".lift"));
+            // console.log(document.querySelector(".lift"));
 
         }, 2000)
 
