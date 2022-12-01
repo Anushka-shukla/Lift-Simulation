@@ -7,59 +7,52 @@ let topBtn = document.getElementById("top-btn")
 let floorSection = document.querySelector(".floor-section");
 
 function moveLift(j) {
-    let firstLift = document.querySelector(".liftContainer").childNodes[0];
+
+    const targetLifts = Array.from(document.querySelectorAll(".lift"));
+    console.log(targetLifts);
+    const freeLift = targetLifts.find(lift => lift.dataset.state === "free");
+    console.log(freeLift);
+ 
     console.log(" inside calc dis ", j);
     let distance = (90 * j) + (30 * j);
-    firstLift.style.transform = `translate(0, -${distance}px)`;
-    firstLift.style.transitionDuration = `${2 * j}s`;
+    freeLift.style.transform = `translate(0, -${distance}px)`;
+    freeLift.style.transitionDuration = `${2 * j}s`;
 
-    firstLift.setAttribute('data-state', 'busy');
-    console.log("the lift is at state: " + firstLift.dataset.state);
+    freeLift.setAttribute('data-state', 'busy');
+    console.log("the lift is at state: " + freeLift.dataset.state);
 
     setTimeout(() => {
-        animateLiftDoors();
+        animateLiftDoors(freeLift);
     }, 2000 * j)
 
-
-}
-
-// states of lifts {free or busy}
-function liftState() {
-    // get all the generatted lifts instead of nodelist it'll return an array
-   const mylifts = Array.from(document.querySelectorAll(".lift"));
-   console.log("My lifts : " + mylifts);
-//    let freeLifts = [];
-//    let busyLifts = [];
-//    console.log("All the lifts: " + mylifts);
-//    mylifts.setAttribute("liftState", free);
-//    mylifts.setAttribute("liftState", busy);
-
 }
 
 
-function animateLiftDoors() {
-    const firstLift = document.querySelector(".liftContainer").childNodes[0];
-    const leftDoor = document.querySelector(".lift_left");
-    const rightDoor = document.querySelector(".lift_right");
+function animateLiftDoors(freeLift) {
+
+    const leftDoor =  freeLift.childNodes[0];
+    const rightDoor = freeLift.childNodes[1];
     leftDoor.style.transform = `translate(-30px, 0)`;
     rightDoor.style.transform = `translate(30px, 0)`;
     leftDoor.style.transitionDuration = `2.5s`;
     rightDoor.style.transitionDuration = `2.5s`;
 
+    console.log(leftDoor);
+
     setTimeout(() => {
         leftDoor.style.transform = `translate(0, 0)`;
         rightDoor.style.transform = `translate(0, 0)`;
-        
-        
+
+
     }, 2500)
 
-    setTimeout(()=>{
-        firstLift.setAttribute('data-state', 'free');
-        console.log("the lift is at state: " + firstLift.dataset.state);
+    // setting the status of the lift as free back again
+    setTimeout(() => {
+        freeLift.setAttribute('data-state', 'free');
+        console.log("the lift is at state: " + freeLift.dataset.state);
 
     }, 5000)
 
-    // console.log("the lift is at state: " + firstLift.dataset.state);
 
 }
 
@@ -74,12 +67,12 @@ let generateFloors = (floor_no) => {
         btn_lift_down.className = "btn_lift_down";
         btn_lift_down.textContent = "DOWN";
 
+        // freeLifts(position);
         btn_lift_up.addEventListener("click", () => { moveLift(j) });
 
         btn_lift_down.addEventListener("click", () => { moveLift(j) });
-
+        
         // button "UP" & "DOWN" are inside a parent wrapper "btn_wrapper" which is child of flooSection
-
         const floor = document.createElement("div");
         floor.className = "floor";
         const floorText = document.createElement("p");
@@ -93,7 +86,7 @@ let generateFloors = (floor_no) => {
         floor.append(btn_wrapper);
         floor.prepend(floorText)
 
-        console.log(floorSection.childNodes[0], "from the loop of floors generation");
+        // console.log(floorSection.childNodes[0], "from the loop of floors generation");
 
     }
 };
@@ -122,12 +115,12 @@ let generateLifts = (lift_no) => {
         lift.appendChild(lift_left);
         lift.appendChild(lift_right);
 
-        lift.setAttribute('id' , liftNo);
-        console.log(lift.id);
+        lift.setAttribute('id', liftNo);
+        // console.log(lift.id);
 
         // setting the status of the lift as free initially
         lift.setAttribute('data-state', 'free');
-        console.log("the lift is at state: " + lift.dataset.state);
+        // console.log("the lift is at state: " + lift.dataset.state);
 
         setTimeout(() => {
             let firstFloor = floorSection.childNodes[floorSection.childNodes.length - 1];
@@ -138,8 +131,6 @@ let generateLifts = (lift_no) => {
         }, 2000)
 
     }
-
-
 
 };
 
