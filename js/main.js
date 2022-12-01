@@ -144,8 +144,17 @@ function verifySimulationInputs() {
     if (window.innerWidth <= 500 && lifts > 2) {
         alert("This screen size can't have more than 2 lifts");
     }
-    else if (window.innerWidth > 500 && window.innerWidth <= 768 && lifts > 6) {
-        alert("This screen size can't have more than 6 lifts");
+    else if (window.innerWidth > 500 && window.innerWidth <= 768 && lifts > 4) {
+        alert("This screen size can't have more than 4 lifts");
+    }
+    else if (window.innerWidth > 500 && window.innerWidth <= 1024 && lifts > 7){
+        alert("This screen size can't have more than 7 lifts");
+    }
+    else if (window.innerWidth > 500 && window.innerWidth <= 1440 && lifts > 10){
+        alert("This screen size can't have more than 10 lifts");
+    }
+    else if (window.innerWidth > 500 && window.innerWidth <= 2560 && lifts > 17){
+        alert("This screen size can't have more than 17 lifts");
     }
     else {
         generateFloors(floors);
