@@ -6,38 +6,72 @@ let topBtn = document.getElementById("top-btn")
 
 let floorSection = document.querySelector(".floor-section");
 
+// when the lift is in a busy state and user presses another up/down button then store the request
+let liftRequests = [];
+const storeLiftRequest = (j) => {
+    liftRequests.push(j);
+    console.log("storing lift requests: ", liftRequests);
+};
+
 function moveLift(j) {
+   
 
     const targetLifts = Array.from(document.querySelectorAll(".lift"));
-    console.log(targetLifts);
-    const freeLift = targetLifts.find(lift => lift.dataset.state === "free");
-    console.log(freeLift);
- 
-    console.log(" inside calc dis ", j);
-    let distance = (90 * j) + (30 * j);
-    freeLift.style.transform = `translate(0, -${distance}px)`;
-    freeLift.style.transitionDuration = `${2 * j}s`;
 
-    freeLift.setAttribute('data-state', 'busy');
-    console.log("the lift is at state: " + freeLift.dataset.state);
+    const freeLift = targetLifts.find((lift) => lift.dataset.state === "free");
+    console.log(
+      `lift's current floor ${freeLift.dataset.currentFloor}, incoming request${j}`
+    );
+
+    let floorDifference = Math.abs(Number(freeLift.dataset.currentFloor) - j);
+    // freeLift.style.transform = `translate(0, -${120 * floorDifference}px)`;
+    // freeLift.style.transitionDuration = `${2.5 * floorDifference}s`;
+    // my version---------
+    freeLift.style.transition = `bottom ${floorDifference * 2.5}s`; //duration
+    freeLift.style.bottom = `${120 * (j-1) }px`; //distance
+
+    // ----------
+
+    console.log(floorDifference, "calculated floor difference");
+    console.log("distance it should travel", 120 * floorDifference, "px");
+    freeLift.setAttribute("data-state", "busy");
+
+    
 
     setTimeout(() => {
-        animateLiftDoors(freeLift);
-    }, 2000 * j)
+      animateLiftDoors(freeLift, j);
+    }, 2500 * floorDifference);
+    freeLift.setAttribute("data-current-floor", j);
+    console.log("updated lift's current floor", freeLift.dataset.currentFloor);
+  }
+
+
+// lift vacancy
+function handleLiftVacancy(j) {
+    freeLiftsArr = Array.from(document.querySelectorAll(".lift"));
+    if (
+
+        freeLiftsArr.find((lift) => lift.dataset.state === "free")
+    ) {
+        moveLift(j);
+    } else {
+        storeLiftRequest(j);
+        console.log("lift needs to go on these floors too- ", j)
+    }
 
 }
 
 
-function animateLiftDoors(freeLift) {
+function animateLiftDoors(freeLift, j) {
 
-    const leftDoor =  freeLift.childNodes[0];
+    const leftDoor = freeLift.childNodes[0];
     const rightDoor = freeLift.childNodes[1];
     leftDoor.style.transform = `translate(-30px, 0)`;
     rightDoor.style.transform = `translate(30px, 0)`;
     leftDoor.style.transitionDuration = `2.5s`;
     rightDoor.style.transitionDuration = `2.5s`;
 
-    console.log(leftDoor);
+    // console.log(leftDoor);
 
     setTimeout(() => {
         leftDoor.style.transform = `translate(0, 0)`;
@@ -51,14 +85,22 @@ function animateLiftDoors(freeLift) {
         freeLift.setAttribute('data-state', 'free');
         console.log("the lift is at state: " + freeLift.dataset.state);
 
-    }, 5000)
+        if (liftRequests.length > 0) {
+            // liftRequests[0];
+            moveLift(liftRequests[0]);
+            // console.log("inside lift req:");
+            liftRequests.shift();
+        }
+        freeLift.setAttribute('data-current-floor', j);
+        console.log(freeLift.dataset.currentFloor, "I am from set timeout");
 
+    }, 5000)
 
 }
 
 // generating floors
 let generateFloors = (floor_no) => {
-    for (let j = 0; j < floor_no; j++) {
+    for (let j = 1; j <= floor_no; j++) {
 
         const btn_lift_up = document.createElement("button");
         btn_lift_up.className = "btn_lift_up";
@@ -67,11 +109,9 @@ let generateFloors = (floor_no) => {
         btn_lift_down.className = "btn_lift_down";
         btn_lift_down.textContent = "DOWN";
 
-        // freeLifts(position);
-        btn_lift_up.addEventListener("click", () => { moveLift(j) });
+        btn_lift_up.addEventListener("click", () => { handleLiftVacancy(j) });
+        btn_lift_down.addEventListener("click", () => { handleLiftVacancy(j) });
 
-        btn_lift_down.addEventListener("click", () => { moveLift(j) });
-        
         // button "UP" & "DOWN" are inside a parent wrapper "btn_wrapper" which is child of flooSection
         const floor = document.createElement("div");
         floor.className = "floor";
@@ -106,7 +146,7 @@ let generateLifts = (lift_no) => {
         lift.className = "lift";
 
         // setting value of the lift when it's on floor-0
-        lift.setAttribute("data-currentFloor", 0);
+        lift.setAttribute("data-current-floor", 0);
         const lift_right = document.createElement("div");
         lift_right.className = "lift_right";
         const lift_left = document.createElement("div");
@@ -121,6 +161,8 @@ let generateLifts = (lift_no) => {
         // setting the status of the lift as free initially
         lift.setAttribute('data-state', 'free');
         // console.log("the lift is at state: " + lift.dataset.state);
+        lift.setAttribute('data-current-floor', 0);
+
 
         setTimeout(() => {
             let firstFloor = floorSection.childNodes[floorSection.childNodes.length - 1];
@@ -147,13 +189,13 @@ function verifySimulationInputs() {
     else if (window.innerWidth > 500 && window.innerWidth <= 768 && lifts > 4) {
         alert("This screen size can't have more than 4 lifts");
     }
-    else if (window.innerWidth > 500 && window.innerWidth <= 1024 && lifts > 7){
+    else if (window.innerWidth > 500 && window.innerWidth <= 1024 && lifts > 7) {
         alert("This screen size can't have more than 7 lifts");
     }
-    else if (window.innerWidth > 500 && window.innerWidth <= 1440 && lifts > 10){
+    else if (window.innerWidth > 500 && window.innerWidth <= 1440 && lifts > 10) {
         alert("This screen size can't have more than 10 lifts");
     }
-    else if (window.innerWidth > 500 && window.innerWidth <= 2560 && lifts > 17){
+    else if (window.innerWidth > 500 && window.innerWidth <= 2560 && lifts > 17) {
         alert("This screen size can't have more than 17 lifts");
     }
     else {
