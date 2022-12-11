@@ -15,7 +15,6 @@ const storeLiftRequest = (j) => {
 
 function moveLift(j) {
    
-
     const targetLifts = Array.from(document.querySelectorAll(".lift"));
 
     const freeLift = targetLifts.find((lift) => lift.dataset.state === "free");
@@ -23,20 +22,19 @@ function moveLift(j) {
       `lift's current floor ${freeLift.dataset.currentFloor}, incoming request${j}`
     );
 
+    // if the lift already exists on the floor and it is free and being called on the same floor then open its door
+    // if(freeLift.dataset.currentFloor == j){
+    //     animateLiftDoors(freeLift, j);
+    //     console.log("inside the if lift already exists-")
+    // }
+
     let floorDifference = Math.abs(Number(freeLift.dataset.currentFloor) - j);
-    // freeLift.style.transform = `translate(0, -${120 * floorDifference}px)`;
-    // freeLift.style.transitionDuration = `${2.5 * floorDifference}s`;
-    // my version---------
     freeLift.style.transition = `bottom ${floorDifference * 2.5}s`; //duration
     freeLift.style.bottom = `${120 * (j-1) }px`; //distance
-
-    // ----------
 
     console.log(floorDifference, "calculated floor difference");
     console.log("distance it should travel", 120 * floorDifference, "px");
     freeLift.setAttribute("data-state", "busy");
-
-    
 
     setTimeout(() => {
       animateLiftDoors(freeLift, j);
