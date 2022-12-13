@@ -21,12 +21,18 @@ function moveLift(j) {
     console.log(
       `lift's current floor ${freeLift.dataset.currentFloor}, incoming request${j}`
     );
+//     console.log(typeof(freeLift.dataset.currentFloor));
+//     console.log(freeLift.dataset.currentFloor === j); // need to check giving out "false"
+   // if the lift already exists on the floor and it is free and being called on the same floor then open its door
+    if(Number(freeLift.dataset.currentFloor) === j){
+    
+        console.log("inside free lift move");
+        animateLiftDoors(freeLift, j);
+        console.log("inside the if lift already exists-");
+        
+    }
 
-    // if the lift already exists on the floor and it is free and being called on the same floor then open its door
-    // if(freeLift.dataset.currentFloor == j){
-    //     animateLiftDoors(freeLift, j);
-    //     console.log("inside the if lift already exists-")
-    // }
+  
 
     let floorDifference = Math.abs(Number(freeLift.dataset.currentFloor) - j);
     freeLift.style.transition = `bottom ${floorDifference * 2.5}s`; //duration
