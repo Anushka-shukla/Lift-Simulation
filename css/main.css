@@ -238,7 +238,7 @@ body {
 /* media queries for tablet */
 @media screen and (max-width: 768px) {
     .lift { 
-        height: 70px;
+        height: 90px;
         width: 45px;
     }
 
@@ -257,10 +257,6 @@ body {
 
     .floorText {
         font-size: 13px;
-    }
-
-    .floor{
-        height: 80px;
     }
 
 }
