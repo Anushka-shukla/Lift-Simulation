@@ -14,40 +14,40 @@ const storeLiftRequest = (j) => {
 };
 
 function moveLift(j) {
-   
+
     const targetLifts = Array.from(document.querySelectorAll(".lift"));
 
     const freeLift = targetLifts.find((lift) => lift.dataset.state === "free");
     console.log(
-      `lift's current floor ${freeLift.dataset.currentFloor}, incoming request${j}`
+        `lift's current floor ${freeLift.dataset.currentFloor}, incoming request${j}`
     );
-//     console.log(typeof(freeLift.dataset.currentFloor));
-//     console.log(freeLift.dataset.currentFloor === j); // need to check giving out "false"
-   // if the lift already exists on the floor and it is free and being called on the same floor then open its door
-    if(Number(freeLift.dataset.currentFloor) === j){
-    
+    //     console.log(typeof(freeLift.dataset.currentFloor));
+    //     console.log(freeLift.dataset.currentFloor === j); // need to check giving out "false"
+
+    // if the lift already exists on the floor and it is free and being called on the same floor then open its door
+    if (Number(freeLift.dataset.currentFloor) === j) {
+
         console.log("inside free lift move");
         animateLiftDoors(freeLift, j);
         console.log("inside the if lift already exists-");
-        
-    }
 
-  
+    }
 
     let floorDifference = Math.abs(Number(freeLift.dataset.currentFloor) - j);
     freeLift.style.transition = `bottom ${floorDifference * 2.5}s`; //duration
-    freeLift.style.bottom = `${120 * (j-1) }px`; //distance
+    freeLift.style.transitionTimingFunction = "ease-in-out";
+    freeLift.style.bottom = `${120 * (j - 1)}px`; //distance
 
     console.log(floorDifference, "calculated floor difference");
     console.log("distance it should travel", 120 * floorDifference, "px");
     freeLift.setAttribute("data-state", "busy");
 
     setTimeout(() => {
-      animateLiftDoors(freeLift, j);
+        animateLiftDoors(freeLift, j);
     }, 2500 * floorDifference);
     freeLift.setAttribute("data-current-floor", j);
     console.log("updated lift's current floor", freeLift.dataset.currentFloor);
-  }
+}
 
 
 // lift vacancy
@@ -64,6 +64,12 @@ function handleLiftVacancy(j) {
     }
 
 }
+
+// // nearest free lift
+// function nearestFreeLift(j) {
+//     // if the user calls the lift, and a free lift already exist on the floor 
+//     // just above or below that floor then that lift should be called up.
+// }
 
 
 function animateLiftDoors(freeLift, j) {
@@ -112,6 +118,10 @@ let generateFloors = (floor_no) => {
         const btn_lift_down = document.createElement("button");
         btn_lift_down.className = "btn_lift_down";
         btn_lift_down.textContent = "DOWN";
+
+        // setting state of the the buttons
+        btn_lift_up.setAttribute('data-current-state', "unclicked");
+        btn_lift_down.setAttribute('data-current-state', "unclicked");
 
         btn_lift_up.addEventListener("click", () => { handleLiftVacancy(j) });
         btn_lift_down.addEventListener("click", () => { handleLiftVacancy(j) });
@@ -190,8 +200,8 @@ function verifySimulationInputs() {
     if (window.innerWidth <= 500 && lifts > 2) {
         alert("This screen size can't have more than 2 lifts");
     }
-    else if (window.innerWidth > 500 && window.innerWidth <= 768 && lifts > 4) {
-        alert("This screen size can't have more than 4 lifts");
+    else if (window.innerWidth > 500 && window.innerWidth <= 768 && lifts > 5) {
+        alert("This screen size can't have more than 5 lifts");
     }
     else if (window.innerWidth > 500 && window.innerWidth <= 1024 && lifts > 7) {
         alert("This screen size can't have more than 7 lifts");
