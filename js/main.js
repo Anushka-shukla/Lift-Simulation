@@ -7,8 +7,7 @@ let topBtn = document.getElementById("top-btn")
 let floorSection = document.querySelector(".floor-section");
 
 // Ankush's feedback: make the down button glow like If I go to a lift and a person has pressed the lift button a red light shows that lift has been called already
-//, Also I don't know if disable I do not aboutr selection  -- red light on the floor that user has pressed 
-
+//, Also I don't know if disable I do not about selection  -- red light on the floor that user has pressed 
 // 10 to 1 10 5 - so it should go like 10, 5, 1  like imrovise 
 
 // when the lift is in a busy state and user presses another up/down button then store the request
@@ -84,7 +83,10 @@ function handleLiftVacancy(j) {
 // }
 
 
-function animateLiftDoors(freeLift, j, btn_lift_up, btn_lift_down) {
+function animateLiftDoors(freeLift, j) {
+
+    const btnUp = document.querySelector(".btn_lift_up");
+    const btnDown = document.querySelector(".btn_lift_down");
 
     const leftDoor = freeLift.childNodes[0];
     const rightDoor = freeLift.childNodes[1];
@@ -107,6 +109,10 @@ function animateLiftDoors(freeLift, j, btn_lift_up, btn_lift_down) {
         freeLift.setAttribute('data-state', 'free');
         console.log("the lift is at state: " + freeLift.dataset.state);
 
+        // console.log(btnUp);
+        // btnUp.style["boxShadow"] = "0 0 0 #000";
+        // btnDown.style["boxShadow"] = "0 0 0 #000";
+
         if (liftRequests.length > 0) {
             // liftRequests[0];
             moveLift(liftRequests[0]);
@@ -116,12 +122,16 @@ function animateLiftDoors(freeLift, j, btn_lift_up, btn_lift_down) {
         freeLift.setAttribute('data-current-floor', j);
         console.log(freeLift.dataset.currentFloor, "I am from set timeout");
 
-        // remove glow when the loft is free
-        btn_lift_up.style.removeProperty("box-shadow");
-        btn_lift_down.style.removeProperty("box-shadow");
+        // remove glow when the lift is free---------------
+        console.log(btnUp);
+         btnUp.style["boxShadow"] = "0 0 10px #000";
+         btnDown.style["boxShadow"] = "0 0 10px #000";
+        // btnUp.style.removeProperty("box-shadow");
+        // btnDown.style.removeProperty("box-shadow");
+        
+        console.log("Removed glow from btn");
 
     }, 5000);
-
 
 }
 
