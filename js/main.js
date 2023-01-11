@@ -8,16 +8,16 @@ let floorSection = document.querySelector(".floor-section");
 
 // Ankush's feedback: make the down button glow like If I go to a lift and a person has pressed the lift button a red light shows that lift has been called already
 //, Also I don't know if disable I do not about selection  -- red light on the floor that user has pressed 
-// 10 to 1 10 5 - so it should go like 10, 5, 1  like imrovise 
+// 10 to 1 10 5 - so it should go like 10, 5, 1  like improvise 
 
 // when the lift is in a busy state and user presses another up/down button then store the request
 let liftRequests = [];
-const storeLiftRequest = (j) => {
+const storeLiftRequest = (j, btn_lift_up, btn_lift_down) => {
     liftRequests.push(j);
     console.log("storing lift requests: ", liftRequests);
 };
 
-function moveLift(j) {
+function moveLift(j, btn_lift_up, btn_lift_down) {
 
     const targetLifts = Array.from(document.querySelectorAll(".lift"));
 
@@ -48,29 +48,24 @@ function moveLift(j) {
     freeLift.setAttribute("data-state", "busy");
 
     setTimeout(() => {
-        animateLiftDoors(freeLift, j);
+        animateLiftDoors(freeLift, j, btn_lift_up, btn_lift_down);
     }, 2500 * floorDifference);
     freeLift.setAttribute("data-current-floor", j);
     console.log("updated lift's current floor", freeLift.dataset.currentFloor);
 
-    // setting state of the the buttons
-    // btn_lift_up.setAttribute('disabled', false);
-    // btn_lift_down.setAttribute('disabled', false);
-    // console.log("the state is btn is", btn_lift_up.disabled);
-    // console.log("the state is btn is", btn_lift_up.disabled);
 }
 
 
 // lift vacancy
-function handleLiftVacancy(j) {
+function handleLiftVacancy(j, btn_lift_up, btn_lift_down) {
     freeLiftsArr = Array.from(document.querySelectorAll(".lift"));
     if (
 
         freeLiftsArr.find((lift) => lift.dataset.state === "free")
     ) {
-        moveLift(j);
+        moveLift(j, btn_lift_up, btn_lift_down);
     } else {
-        storeLiftRequest(j);
+        storeLiftRequest(j, btn_lift_up, btn_lift_down);
         console.log("lift needs to go on these floors too- ", j)
     }
 
@@ -83,10 +78,7 @@ function handleLiftVacancy(j) {
 // }
 
 
-function animateLiftDoors(freeLift, j) {
-
-    const btnUp = document.querySelector(".btn_lift_up");
-    const btnDown = document.querySelector(".btn_lift_down");
+function animateLiftDoors(freeLift, j, btn_lift_up, btn_lift_down) {
 
     const leftDoor = freeLift.childNodes[0];
     const rightDoor = freeLift.childNodes[1];
@@ -102,46 +94,65 @@ function animateLiftDoors(freeLift, j) {
         rightDoor.style.transform = `translate(0, 0)`;
 
 
-    }, 2500)
+    }, 2500);
 
     // setting the status of the lift as free back again
     setTimeout(() => {
         freeLift.setAttribute('data-state', 'free');
         console.log("the lift is at state: " + freeLift.dataset.state);
 
-        // console.log(btnUp);
-        // btnUp.style["boxShadow"] = "0 0 0 #000";
-        // btnDown.style["boxShadow"] = "0 0 0 #000";
-
         if (liftRequests.length > 0) {
             // liftRequests[0];
-            moveLift(liftRequests[0]);
+            moveLift(liftRequests[0], btn_lift_up, btn_lift_down);
             // console.log("inside lift req:");
             liftRequests.shift();
         }
         freeLift.setAttribute('data-current-floor', j);
         console.log(freeLift.dataset.currentFloor, "I am from set timeout");
 
-        // remove glow when the lift is free---------------
-        console.log(btnUp);
-         btnUp.style["boxShadow"] = "0 0 10px #000";
-         btnDown.style["boxShadow"] = "0 0 10px #000";
-        // btnUp.style.removeProperty("box-shadow");
-        // btnDown.style.removeProperty("box-shadow");
-        
-        console.log("Removed glow from btn");
-
+        // remove glow when the lift is free
+        removeGlow(j);
     }, 5000);
-
+     //tried here as well - bit better but not for the last request
+    
 }
 
 // add glow to the button when a user clicks the button of any lift
 function addGlow(btn_lift_up, btn_lift_down) {
-    // const btnUp = document.querySelector(".btn_lift_up");
-    // const btnDown = document.querySelector(".btn_lift_down");
-
     btn_lift_up.style["box-shadow"] = "0 5px 15px red";
     btn_lift_down.style["box-shadow"] = "0 5px 15px red";
+
+}
+
+function removeGlow(targetFloorNo) {
+   
+    // nodelist of btns
+    const btnUpAll = document.querySelectorAll(".btn_lift_up");
+    const btnDownAll = document.querySelectorAll(".btn_lift_down");
+    // console.log("node list of btns: ", btnUpAll, btnDownAll);
+
+    // nodelist of btns converted to array
+    const btnUpArr = Array.from(btnUpAll);
+    const btnDownArr = Array.from(btnDownAll);
+    // console.log("nodelist converted to arr: ", btnUpArr, btnDownArr);
+
+    // array of btns reversed
+    const btnUpArrReverted = btnUpArr.reverse();
+    const btnDownArrReverted = btnDownArr.reverse();
+    console.log("array reversed: ", btnUpArrReverted, btnDownArrReverted);
+
+    const targetUpBtn = btnUpArrReverted[targetFloorNo];
+    const targetDownBtn = btnDownArrReverted[targetFloorNo];
+
+    // console.log("btns: ", btnUpArr, btnDownArr);
+    targetUpBtn.style["boxShadow"] = "none";
+    targetDownBtn.style["boxShadow"] = "none";
+
+    console.log(targetFloorNo);
+    console.log("target btns: ", targetUpBtn, targetDownBtn);
+
+    console.log("Removed glow from btn");
+
 
 }
 
@@ -157,26 +168,20 @@ let generateFloors = (floor_no) => {
         btn_lift_down.className = "btn_lift_down";
         btn_lift_down.textContent = "DOWN";
 
-        // setting state of the the buttons
-        // btn_lift_up.setAttribute('disabled', true);
-        // btn_lift_down.setAttribute('disabled', true);
-        // console.log("the state is btn is", btn_lift_up.disabled);
-        // console.log("the state is btn is", btn_lift_up.disabled);
-
         btn_lift_up.addEventListener("click", () => {
-            handleLiftVacancy(j);
+            handleLiftVacancy(j, btn_lift_up, btn_lift_down);
             //add glow on click
             addGlow(btn_lift_up, btn_lift_down);
             console.log("glow msg");
         });
         btn_lift_down.addEventListener("click", () => {
-            handleLiftVacancy(j);
+            handleLiftVacancy(j, btn_lift_up, btn_lift_down);
             //add glow on click
             addGlow(btn_lift_up, btn_lift_down);
             console.log("glow msg");
         });
 
-        // button "UP" & "DOWN" are inside a parent wrapper "btn_wrapper" which is child of flooSection
+        // button "UP" & "DOWN" are inside a parent wrapper "btn_wrapper" which is child of floorSection
         const floor = document.createElement("div");
         floor.className = "floor";
         const floorText = document.createElement("p");
