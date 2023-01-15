@@ -6,11 +6,9 @@ let topBtn = document.getElementById("top-btn")
 
 let floorSection = document.querySelector(".floor-section");
 
-// Ankush's feedback: make the down button glow like If I go to a lift and a person has pressed the lift button a red light shows that lift has been called already
 //, Also I don't know if disable I do not about selection  -- red light on the floor that user has pressed 
 // 10 to 1 10 5 - so it should go like 10, 5, 1  like improvise 
 
-// when the lift is in a busy state and user presses another up/down button then store the request
 let liftRequests = [];
 const storeLiftRequest = (j, btn_lift_up, btn_lift_down) => {
     liftRequests.push(j);
@@ -108,10 +106,11 @@ function animateLiftDoors(freeLift, j, btn_lift_up, btn_lift_down) {
             liftRequests.shift();
         }
         freeLift.setAttribute('data-current-floor', j);
-        console.log(freeLift.dataset.currentFloor, "I am from set timeout");
+        console.log(freeLift.dataset.currentFloor, "I am from set timeout", j);
 
         // remove glow when the lift is free
         removeGlow(j);
+        
     }, 5000);
      //tried here as well - bit better but not for the last request
     
@@ -121,6 +120,7 @@ function animateLiftDoors(freeLift, j, btn_lift_up, btn_lift_down) {
 function addGlow(btn_lift_up, btn_lift_down) {
     btn_lift_up.style["box-shadow"] = "0 5px 15px red";
     btn_lift_down.style["box-shadow"] = "0 5px 15px red";
+
 
 }
 
@@ -141,8 +141,8 @@ function removeGlow(targetFloorNo) {
     const btnDownArrReverted = btnDownArr.reverse();
     console.log("array reversed: ", btnUpArrReverted, btnDownArrReverted);
 
-    const targetUpBtn = btnUpArrReverted[targetFloorNo];
-    const targetDownBtn = btnDownArrReverted[targetFloorNo];
+    const targetUpBtn = btnUpArrReverted[targetFloorNo -1];
+    const targetDownBtn = btnDownArrReverted[targetFloorNo -1];
 
     // console.log("btns: ", btnUpArr, btnDownArr);
     targetUpBtn.style["boxShadow"] = "none";
