@@ -10,30 +10,36 @@ let floorSection = document.querySelector(".floor-section");
 // 10 to 1 10 5 - so it should go like 10, 5, 1  like improvise 
 
 let liftRequests = [];
-const storeLiftRequest = (j, btn_lift_up, btn_lift_down) => {
+const storeLiftRequest = (j) => {
+
     liftRequests.push(j);
-    console.log("storing lift requests: ", liftRequests);
+
 };
+
 
 function moveLift(j, btn_lift_up, btn_lift_down) {
 
     const targetLifts = Array.from(document.querySelectorAll(".lift"));
-
-    const freeLift = targetLifts.find((lift) => lift.dataset.state === "free");
-    console.log(
-        `lift's current floor ${freeLift.dataset.currentFloor}, incoming request${j}`
-    );
+    // find returns the 1st lift
+    const freeLift = targetLifts.find((lift) => lift.dataset.state === "free");// acc nearest lift
+    const freeLiftOnCurrentFloor = targetLifts.find((lift) => lift.dataset.state === "free" && Number(lift.dataset.currentFloor) === j);
+    // console.log(
+    //     `lift's current floor ${freeLift.dataset.currentFloor}, incoming request${j}`
+    // );
 
     //     console.log(typeof(freeLift.dataset.currentFloor));
     //     console.log(freeLift.dataset.currentFloor === j); // need to check giving out "false"
+    console.log(freeLiftOnCurrentFloor);
+    console.log(targetLifts);
+    console.log(targetLifts.map((lift) => lift.dataset));
 
     // if the lift already exists on the floor and it is free and being called on the same floor then open its door
-    if (Number(freeLift.dataset.currentFloor) === j) {
-
-        console.log("inside free lift move");
-        animateLiftDoors(freeLift, j);
-        console.log("inside the if lift already exists-");
-
+    if (freeLiftOnCurrentFloor) {
+        freeLiftOnCurrentFloor.setAttribute("data-state", "busy");
+        // console.log("inside free lift move");
+        animateLiftDoors(freeLiftOnCurrentFloor, j);
+        // console.log("inside the if lift already exists-");
+        return;
     }
 
     let floorDifference = Math.abs(Number(freeLift.dataset.currentFloor) - j);
@@ -41,9 +47,23 @@ function moveLift(j, btn_lift_up, btn_lift_down) {
     freeLift.style.transitionTimingFunction = "ease-in-out";
     freeLift.style.bottom = `${120 * (j - 1)}px`; //distance
 
-    console.log(floorDifference, "calculated floor difference");
-    console.log("distance it should travel", 120 * floorDifference, "px");
+    // console.log(floorDifference, "calculated floor difference");
+    // console.log("distance it should travel", 120 * floorDifference, "px");
     freeLift.setAttribute("data-state", "busy");
+
+    let interval = Number(freeLift.dataset.currentFloor);
+    while (floorDifference > interval) {
+        setTimeout(() => {
+
+            if (floorDifference > 0) {
+                const floorInBetweenOfFirstReq = liftRequests.filter(floorNum => (interval < floorNum)).sort();
+// loop mai fasao transition ko///////////////////////////////////
+            }
+
+
+        })
+
+    }
 
     setTimeout(() => {
         animateLiftDoors(freeLift, j, btn_lift_up, btn_lift_down);
@@ -51,8 +71,19 @@ function moveLift(j, btn_lift_up, btn_lift_down) {
     freeLift.setAttribute("data-current-floor", j);
     console.log("updated lift's current floor", freeLift.dataset.currentFloor);
 
+
 }
 
+// snapshot of lifts and floor at initial instance
+// function catchState() {
+//     let noOfFloor = document.querySelectorAll(".floor");
+//     console.log("priting initial state of floors: ", noOfFloor);
+//     let noOfLifts = document.getElementsByClassName("lift"); //  querySelectorAll(returns static collection) was giving empty array while it retuns live collection
+//     console.log("priting initial state of lifts: ", noOfLifts);
+
+//     let requests = liftRequests;
+//     console.log(requests);
+// }
 
 // lift vacancy
 function handleLiftVacancy(j, btn_lift_up, btn_lift_down) {
@@ -64,7 +95,7 @@ function handleLiftVacancy(j, btn_lift_up, btn_lift_down) {
         moveLift(j, btn_lift_up, btn_lift_down);
     } else {
         storeLiftRequest(j, btn_lift_up, btn_lift_down);
-        console.log("lift needs to go on these floors too- ", j)
+        // console.log("lift needs to go on these floors too- ", j)
     }
 
 }
@@ -97,23 +128,32 @@ function animateLiftDoors(freeLift, j, btn_lift_up, btn_lift_down) {
     // setting the status of the lift as free back again
     setTimeout(() => {
         freeLift.setAttribute('data-state', 'free');
-        console.log("the lift is at state: " + freeLift.dataset.state);
+        // console.log("the lift is at state: " + freeLift.dataset.state);
 
-        if (liftRequests.length > 0) {
+        // console.log(liftRequests);
+        const sortedLiftRequestArr =
+            liftRequests.sort(function (a, b) {
+                return (a - b);
+
+            });
+        // console.log(sortedLiftRequestArr);
+
+        if (sortedLiftRequestArr.length > 0) {
             // liftRequests[0];
-            moveLift(liftRequests[0], btn_lift_up, btn_lift_down);
+            moveLift(sortedLiftRequestArr[0], btn_lift_up, btn_lift_down);
             // console.log("inside lift req:");
-            liftRequests.shift();
+            sortedLiftRequestArr.shift();
         }
         freeLift.setAttribute('data-current-floor', j);
-        console.log(freeLift.dataset.currentFloor, "I am from set timeout", j);
+        // console.log(freeLift.dataset.currentFloor, "I am from set timeout", j);
 
         // remove glow when the lift is free
         removeGlow(j);
-        
+        console.log(freeLift.dataset);
+
     }, 5000);
-     //tried here as well - bit better but not for the last request
-    
+    //tried here as well - bit better but not for the last request
+
 }
 
 // add glow to the button when a user clicks the button of any lift
@@ -125,7 +165,7 @@ function addGlow(btn_lift_up, btn_lift_down) {
 }
 
 function removeGlow(targetFloorNo) {
-   
+
     // nodelist of btns
     const btnUpAll = document.querySelectorAll(".btn_lift_up");
     const btnDownAll = document.querySelectorAll(".btn_lift_down");
@@ -139,19 +179,15 @@ function removeGlow(targetFloorNo) {
     // array of btns reversed
     const btnUpArrReverted = btnUpArr.reverse();
     const btnDownArrReverted = btnDownArr.reverse();
-    console.log("array reversed: ", btnUpArrReverted, btnDownArrReverted);
+    // console.log("array reversed: ", btnUpArrReverted, btnDownArrReverted);
 
-    const targetUpBtn = btnUpArrReverted[targetFloorNo -1];
-    const targetDownBtn = btnDownArrReverted[targetFloorNo -1];
+    const targetUpBtn = btnUpArrReverted[targetFloorNo - 1];
+    const targetDownBtn = btnDownArrReverted[targetFloorNo - 1];
 
-    // console.log("btns: ", btnUpArr, btnDownArr);
     targetUpBtn.style["boxShadow"] = "none";
     targetDownBtn.style["boxShadow"] = "none";
 
-    console.log(targetFloorNo);
-    console.log("target btns: ", targetUpBtn, targetDownBtn);
-
-    console.log("Removed glow from btn");
+    // console.log("Removed glow from btn");
 
 
 }
@@ -170,15 +206,24 @@ let generateFloors = (floor_no) => {
 
         btn_lift_up.addEventListener("click", () => {
             handleLiftVacancy(j, btn_lift_up, btn_lift_down);
+
+            //calling the calc dis func on the click of any new floor
+            // calcDistance(j);
+
             //add glow on click
             addGlow(btn_lift_up, btn_lift_down);
-            console.log("glow msg");
+            // console.log("glow msg");
         });
         btn_lift_down.addEventListener("click", () => {
             handleLiftVacancy(j, btn_lift_up, btn_lift_down);
+
+            //calling the calc dis func on the click of any new floor
+            // calcDistance(j);
+
+
             //add glow on click
             addGlow(btn_lift_up, btn_lift_down);
-            console.log("glow msg");
+            // console.log("glow msg");
         });
 
         // button "UP" & "DOWN" are inside a parent wrapper "btn_wrapper" which is child of floorSection
@@ -194,6 +239,7 @@ let generateFloors = (floor_no) => {
         btn_wrapper.appendChild(btn_lift_down);
         floor.append(btn_wrapper);
         floor.prepend(floorText)
+        floor.setAttribute('id', j);
 
         // console.log(floorSection.childNodes[0], "from the loop of floors generation");
 
@@ -229,9 +275,8 @@ let generateLifts = (lift_no) => {
 
         // setting the status of the lift as free initially
         lift.setAttribute('data-state', 'free');
-        // console.log("the lift is at state: " + lift.dataset.state);
+        console.log("the lift is at state: " + lift.dataset.state);
         lift.setAttribute('data-current-floor', 0);
-
 
         setTimeout(() => {
             let firstFloor = floorSection.childNodes[floorSection.childNodes.length - 1];
@@ -240,6 +285,7 @@ let generateLifts = (lift_no) => {
             // console.log(document.querySelector(".lift"));
 
         }, 2000)
+        // catchState();
 
     }
 
