@@ -51,19 +51,32 @@ function moveLift(j, btn_lift_up, btn_lift_down) {
     // console.log("distance it should travel", 120 * floorDifference, "px");
     freeLift.setAttribute("data-state", "busy");
 
-    let interval = Number(freeLift.dataset.currentFloor);
-    while (floorDifference > interval) {
-        setTimeout(() => {
+    //     let interval = Number(freeLift.dataset.currentFloor);
+    //     while (floorDifference > interval) {
+    //         setTimeout(() => {
 
-            if (floorDifference > 0) {
-                const floorInBetweenOfFirstReq = liftRequests.filter(floorNum => (interval < floorNum)).sort();
-// loop mai fasao transition ko///////////////////////////////////
-            }
+    //             if (floorDifference > 0) {
+    //                 const floorInBetweenOfFirstReq = liftRequests.filter(floorNum => (interval < floorNum)).sort();
+    // // loop mai fasao transition ko///////////////////////////////////
+    //             }
 
 
-        })
+    //         })
 
-    }
+    //     }
+
+   
+    // let checkInterval =  setInterval(() => {
+    //             console.log([...liftRequests].sort());
+
+
+    // }, 1000);
+    // if(liftRequests.length === 0){
+    //     clearInterval(checkInterval);
+    // }
+    
+
+
 
     setTimeout(() => {
         animateLiftDoors(freeLift, j, btn_lift_up, btn_lift_down);
@@ -136,7 +149,7 @@ function animateLiftDoors(freeLift, j, btn_lift_up, btn_lift_down) {
                 return (a - b);
 
             });
-        // console.log(sortedLiftRequestArr);
+        console.log(sortedLiftRequestArr);
 
         if (sortedLiftRequestArr.length > 0) {
             // liftRequests[0];
@@ -329,3 +342,16 @@ startBtn.addEventListener("click", (e) => {
     topBtn.style.display = "block";
     // console.log(sampleDiv)
 });
+
+
+
+
+
+
+
+
+// let sampleArr = [4,6,3,5];
+
+// console.log([...sampleArr].sort());
+
+// console.log(sampleArr);
